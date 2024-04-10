@@ -81,17 +81,17 @@ contract HeirloomTest is Test {
     }
 
     function test_setModule_WrongModule() public {
-        //"DMS: This contract is not supported."
+        //"Heirloom: This contract is not supported."
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        vm.expectRevert(/*"DMS: This contract is not supported."*/);
-        Heirloom.setModule(address(1), father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        vm.expectRevert(/*"Heirloom: This contract is not supported."*/);
+        heirloom.setModule(address(1), father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
     }
@@ -101,17 +101,17 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.warp(will_timer + block.timestamp + 1);
 
         vm.expectRevert("Module: The module timer has expired");
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer == block.timestamp - 1, "Timer should be now");
 
@@ -122,13 +122,13 @@ contract HeirloomTest is Test {
         
         vm.startPrank(daughter);
 
-        //IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
+        //IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
         vm.expectRevert("Module: Only the owner of the module can call this function");
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
     }
@@ -138,13 +138,13 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        //IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
+        //IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
         vm.expectRevert("Module: User has not approved the densityModule to this contract");
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
     }
@@ -154,13 +154,13 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
         vm.expectRevert("Beneficiary cannot be address(0)");
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, address(0));
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, address(0));
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
     }
@@ -172,8 +172,8 @@ contract HeirloomTest is Test {
 
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         IERC721(densityModule0).safeTransferFrom(father, nft_buyer, father_module0_tokenId, "");
 
@@ -181,12 +181,12 @@ contract HeirloomTest is Test {
 
         vm.startPrank(nft_buyer);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, nft_buyer_timer, nft_buyer_son);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, nft_buyer_timer, nft_buyer_son);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == nft_buyer_son, "Beneficiary should be nft_buyer_son");
         require(timer == nft_buyer_timer + block.timestamp, "Timer should be 2 day from now");
 
@@ -197,16 +197,16 @@ contract HeirloomTest is Test {
     function test_claimModule() public {
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
         vm.warp(will_timer + block.timestamp + 1);
 
-        Heirloom.claimModule(densityModule0, father_module0_tokenId);
+        heirloom.claimModule(densityModule0, father_module0_tokenId);
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
 
@@ -220,16 +220,16 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
         vm.warp(will_timer + block.timestamp - 2);
         vm.expectRevert("Module: The module timer has not expired yet");
-        Heirloom.claimModule(densityModule0, father_module0_tokenId);
+        heirloom.claimModule(densityModule0, father_module0_tokenId);
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer != 0, "Timer should not be 0");
     }
@@ -239,17 +239,17 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         IERC721(densityModule0).safeTransferFrom(father, nft_buyer, father_module0_tokenId, "");
 
         vm.stopPrank();
 
         vm.warp(will_timer + block.timestamp + 1);
-        Heirloom.claimModule(densityModule0, father_module0_tokenId);
+        heirloom.claimModule(densityModule0, father_module0_tokenId);
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
         require(IERC721(densityModule0).ownerOf(father_module0_tokenId) == nft_buyer, "Token should be transferred to the beneficiary");
@@ -261,18 +261,18 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
         
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), false);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), false);
 
         vm.stopPrank();
 
         vm.warp(will_timer + block.timestamp + 1);
 
-        Heirloom.claimModule(densityModule0, father_module0_tokenId);
+        heirloom.claimModule(densityModule0, father_module0_tokenId);
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
         //console.log(IERC721(densityModule0).ownerOf(father_module0_tokenId), "!=", daughter);
@@ -284,18 +284,18 @@ contract HeirloomTest is Test {
     function test_resetModuleTimer() public {
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
 
         vm.warp(will_timer + block.timestamp - 2);
 
         uint256 new_timer = 2 days;
-        Heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, new_timer);
+        heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, new_timer);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer == new_timer + block.timestamp, "Timer should be 2 day from now");
         require(IERC721(densityModule0).ownerOf(father_module0_tokenId) == father, "Token should not be transferred to the beneficiary");
@@ -307,11 +307,11 @@ contract HeirloomTest is Test {
         vm.startPrank(father);
 
         vm.expectRevert("Module: Module settings requirements not met.");
-        Heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
+        heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == address(0), "Beneficiary should be 0");
         require(timer == 0, "Timer should be 0");
     }
@@ -321,17 +321,17 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.warp(will_timer + block.timestamp + 1);
 
         vm.expectRevert("Module: The module timer has expired");
-        Heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
+        heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer == block.timestamp - 1, "Timer should be now");
     }
@@ -341,16 +341,16 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
         vm.stopPrank();
 
         vm.expectRevert("Module: Only the owner of the module can call this function");
-        Heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
+        heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
 
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer == will_timer + block.timestamp, "Timer should be 1 day from now");
     }
@@ -360,17 +360,17 @@ contract HeirloomTest is Test {
         
         vm.startPrank(father);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), true);
-        Heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
 
-        IERC721(densityModule0).setApprovalForAll(address(Heirloom), false);
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), false);
 
         vm.expectRevert("Module: User has not approved the densityModule to this contract");
-        Heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
+        heirloom.resetModuleTimer(densityModule0, father_module0_tokenId, will_timer);
 
         vm.stopPrank();
 
-        (address beneficiary, uint256 timer) = Heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
         require(beneficiary == daughter, "Beneficiary should be daughter");
         require(timer == will_timer + block.timestamp, "Timer should be 1 day from now");
     }
