@@ -1,5 +1,5 @@
 ## Description
-A contract that leverages ERC6551 to transfer assets in case of death of owner.
+A contract that leverages ERC6551 (referred in contracts as Sentience Module or just Module) to transfer assets in case of death of owner.
 
 Requires the owner of the ERC6551 NFT to approve this contract and then set module within the contract.    
 
