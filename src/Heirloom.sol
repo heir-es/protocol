@@ -3,6 +3,7 @@
 ///@notice A contract to set the beneficiary of the Sentience Module, which can be claimed after the timer expires
 ///@author SophiaVerse 
 ///@dev This contract requires the previous approval of the Sentience Module contract to this contract
+///@dev A Sentience Module is represented by an ERC6551 which is implemented with ERC721
 
 pragma solidity 0.8.20;
 
@@ -69,11 +70,11 @@ contract Heirloom is ReentrancyGuard {
         _;
     }
 
-    ///@param _densityModule0 The address of the first densityModule
-    ///@param _densityModule1 The address of the second densityModule
-    ///@param _densityModule2 The address of the third densityModule
-    ///@param _densityModule3 The address of the fourth densityModule
-    ///@param _densityModule4 The address of the fifth densityModule
+    ///@param _densityModule0 The address of the first tier densityModule
+    ///@param _densityModule1 The address of the second tier densityModule
+    ///@param _densityModule2 The address of the third tier densityModule
+    ///@param _densityModule3 The address of the fourth tier densityModule
+    ///@param _densityModule4 The address of the fifth tier densityModule
     constructor(address _densityModule0, address _densityModule1, address _densityModule2, address _densityModule3, address _densityModule4) {
         // Initialize contract state
         densityModule0 = _densityModule0;
@@ -132,6 +133,8 @@ contract Heirloom is ReentrancyGuard {
 
     ///@notice This function allows the user to claim the module after the timer expires, and the module can be claimed for the beneficiary
     ///@dev This function requires previous set of the module, and if module changes ownership
+    ///@param _densityModule The address of the densityModule
+    ///@param _moduleId The id of the module
     function claimModule(address _densityModule, uint256 _moduleId) external nonReentrant {
         
         //Check if the module timer is expired
