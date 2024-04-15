@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 ///@title Heirloom
 ///@notice A contract to set the beneficiary of the Sentience Module, which can be claimed after the timer expires
-///@author SophiaVerse 
+///@author SophiaVerse
 ///@dev This contract requires the previous approval of the Sentience Module contract to this contract
 ///@dev A Sentience Module is represented by an ERC6551 which is implemented with ERC721
 
@@ -10,7 +10,7 @@ pragma solidity 0.8.20;
 //import IERC721
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-//import ReentrancyGuard 
+//import ReentrancyGuard
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract Heirloom is ReentrancyGuard {
@@ -22,7 +22,9 @@ contract Heirloom is ReentrancyGuard {
     address public densityModule4;
 
     event ModuleSet(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary, uint256 _timer);
-    event ModuleBenefiaryReplaced(address indexed _densityModule, uint256 indexed _moduleId, address _previousBeneficiary, address _newBeneficiary);
+    event ModuleBenefiaryReplaced(
+        address indexed _densityModule, uint256 indexed _moduleId, address _previousBeneficiary, address _newBeneficiary
+    );
     event ModuleReset(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
     event ModuleClaimed(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary);
     event ModuleCanceled(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
@@ -40,25 +42,33 @@ contract Heirloom is ReentrancyGuard {
         address ownerOfWill = densityModule_owner[_densityModule][_moduleId];
 
         //Check if _densityModule is one of the approved densityModules
-        require(_densityModule == densityModule0 || _densityModule == densityModule1 || _densityModule == densityModule2 || _densityModule == densityModule3 || _densityModule == densityModule4, "Heirloom: This contract is not supported.");
+        require(
+            _densityModule == densityModule0 || _densityModule == densityModule1 || _densityModule == densityModule2
+                || _densityModule == densityModule3 || _densityModule == densityModule4,
+            "Heirloom: This contract is not supported."
+        );
 
-        //Check if the module is not set previously, 
-        //and if set, 
+        //Check if the module is not set previously,
+        //and if set,
         //then check if the owner is the same, i.e., the module was not transferred
-        if(ownerOfWill != address(0) && ownerOfWill == ownerOfModule){
-            
-            if(densityModule_timer[_densityModule][_moduleId] != 0){
+        if (ownerOfWill != address(0) && ownerOfWill == ownerOfModule) {
+            if (densityModule_timer[_densityModule][_moduleId] != 0) {
                 //Check if the module timer is not expired
-                require(block.timestamp < densityModule_timer[_densityModule][_moduleId], "Module: The module timer has expired");
+                require(
+                    block.timestamp < densityModule_timer[_densityModule][_moduleId],
+                    "Module: The module timer has expired"
+                );
             }
-
         }
 
         //Check if the user is the owner of the module
         require(msg.sender == ownerOfModule, "Module: Only the owner of the module can call this function");
 
         //Check if user approved the densityModule to this contract; //isApprovedForAll(address owner, address operator)
-        require(IERC721(_densityModule).isApprovedForAll(msg.sender, address(this)), "Module: User has not approved the densityModule to this contract");
+        require(
+            IERC721(_densityModule).isApprovedForAll(msg.sender, address(this)),
+            "Module: User has not approved the densityModule to this contract"
+        );
 
         _;
     }
@@ -75,7 +85,13 @@ contract Heirloom is ReentrancyGuard {
     ///@param _densityModule2 The address of the third tier densityModule
     ///@param _densityModule3 The address of the fourth tier densityModule
     ///@param _densityModule4 The address of the fifth tier densityModule
-    constructor(address _densityModule0, address _densityModule1, address _densityModule2, address _densityModule3, address _densityModule4) {
+    constructor(
+        address _densityModule0,
+        address _densityModule1,
+        address _densityModule2,
+        address _densityModule3,
+        address _densityModule4
+    ) {
         // Initialize contract state
         densityModule0 = _densityModule0;
         densityModule1 = _densityModule1;
@@ -91,16 +107,18 @@ contract Heirloom is ReentrancyGuard {
     ///@param _moduleId The id of the module
     ///@param _timer The time in seconds after which the module can be claimed
     ///@param _beneficiary The address of the beneficiary
-    function setModule(address _densityModule, uint256 _moduleId, uint256 _timer, address _beneficiary) external moduleSupportedRequirements(_densityModule, _moduleId) {
-        
+    function setModule(address _densityModule, uint256 _moduleId, uint256 _timer, address _beneficiary)
+        external
+        moduleSupportedRequirements(_densityModule, _moduleId)
+    {
         //Check if the beneficiary is not address(0)
         require(_beneficiary != address(0), "Beneficiary cannot be address(0)");
 
         address _previousBeneficiary = densityModule_beneficiary[_densityModule][_moduleId];
-        if(_previousBeneficiary != _beneficiary){
+        if (_previousBeneficiary != _beneficiary) {
             //Set the beneficiary of the module
             densityModule_beneficiary[_densityModule][_moduleId] = _beneficiary;
-            if(_previousBeneficiary != address(0)){
+            if (_previousBeneficiary != address(0)) {
                 //Emit event
                 emit ModuleBenefiaryReplaced(_densityModule, _moduleId, _previousBeneficiary, _beneficiary);
             }
@@ -111,7 +129,7 @@ contract Heirloom is ReentrancyGuard {
 
         //Set the owner of the module
         densityModule_owner[_densityModule][_moduleId] = msg.sender;
-        
+
         //Emit event
         emit ModuleSet(_densityModule, _moduleId, _beneficiary, _timer);
     }
@@ -122,8 +140,11 @@ contract Heirloom is ReentrancyGuard {
     ///@param _densityModule The address of the densityModule
     ///@param _moduleId The id of the module
     ///@param _timer The time in seconds after which the module can be claimed
-    function resetModuleTimer(address _densityModule, uint256 _moduleId, uint256 _timer) external moduleSetRequirements(_densityModule, _moduleId) moduleSupportedRequirements(_densityModule, _moduleId) {
-            
+    function resetModuleTimer(address _densityModule, uint256 _moduleId, uint256 _timer)
+        external
+        moduleSetRequirements(_densityModule, _moduleId)
+        moduleSupportedRequirements(_densityModule, _moduleId)
+    {
         //Reset the timer of the module
         densityModule_timer[_densityModule][_moduleId] = block.timestamp + _timer;
 
@@ -136,9 +157,11 @@ contract Heirloom is ReentrancyGuard {
     ///@param _densityModule The address of the densityModule
     ///@param _moduleId The id of the module
     function claimModule(address _densityModule, uint256 _moduleId) external nonReentrant {
-        
         //Check if the module timer is expired
-        require(block.timestamp >= densityModule_timer[_densityModule][_moduleId], "Module: The module timer has not expired yet");
+        require(
+            block.timestamp >= densityModule_timer[_densityModule][_moduleId],
+            "Module: The module timer has not expired yet"
+        );
 
         //Check if the module owner is the same, and the module was not transferred
         address _owner = densityModule_owner[_densityModule][_moduleId];
@@ -154,27 +177,30 @@ contract Heirloom is ReentrancyGuard {
         densityModule_owner[_densityModule][_moduleId] = address(0);
 
         //If the module is not approved for this contract or owner transferred module, then reset module mappings
-        if(IERC721(_densityModule).isApprovedForAll(_owner, address(this)) && IERC721(_densityModule).ownerOf(_moduleId) == _owner){
-           
+        if (
+            IERC721(_densityModule).isApprovedForAll(_owner, address(this))
+                && IERC721(_densityModule).ownerOf(_moduleId) == _owner
+        ) {
             //Safe transfer the module to the beneficiary
             IERC721(_densityModule).safeTransferFrom(_owner, _beneficiary, _moduleId);
-            
+
             //Emit event
             emit ModuleClaimed(_densityModule, _moduleId, _beneficiary);
-        }
-
-        else {
+        } else {
             //Emit event
             emit ModuleCanceled(_densityModule, _moduleId, densityModule_timer[_densityModule][_moduleId]);
         }
-
     }
 
     ///@notice This function allows the user to view the information of the module, i.e., the beneficiary and the timer
     ///@param _densityModule The address of the densityModule
     ///@param _moduleId The id of the module
     ///@return The address of the beneficiary and the timer of the module
-    function viewModuleInformation(address _densityModule, uint256 _moduleId) external view returns(address, uint256) {
+    function viewModuleInformation(address _densityModule, uint256 _moduleId)
+        external
+        view
+        returns (address, uint256)
+    {
         return (densityModule_beneficiary[_densityModule][_moduleId], densityModule_timer[_densityModule][_moduleId]);
     }
 }
