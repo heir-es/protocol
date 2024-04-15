@@ -9,7 +9,10 @@ pragma solidity 0.8.20;
 //import IERC721
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-contract Heirloom {
+//import ReentrancyGuard 
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+contract Heirloom is ReentrancyGuard {
     // Contract variables and state
     address public densityModule0;
     address public densityModule1;
@@ -17,7 +20,7 @@ contract Heirloom {
     address public densityModule3;
     address public densityModule4;
 
-    event ModuleSet(address indexed _densityModule, uint256 indexed _moduleId, address indexed _beneficiary, uint256 _timer);
+    event ModuleSet(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary, uint256 _timer);
     event ModuleBenefiaryReplaced(address indexed _densityModule, uint256 indexed _moduleId, address _previousBeneficiary, address _newBeneficiary);
     event ModuleReset(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
     event ModuleClaimed(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary);
@@ -129,7 +132,7 @@ contract Heirloom {
 
     ///@notice This function allows the user to claim the module after the timer expires, and the module can be claimed for the beneficiary
     ///@dev This function requires previous set of the module, and if module changes ownership
-    function claimModule(address _densityModule, uint256 _moduleId) external {
+    function claimModule(address _densityModule, uint256 _moduleId) external nonReentrant {
         
         //Check if the module timer is expired
         require(block.timestamp >= densityModule_timer[_densityModule][_moduleId], "Module: The module timer has not expired yet");

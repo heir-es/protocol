@@ -279,6 +279,37 @@ contract HeirloomTest is Test {
         require(IERC721(densityModule0).ownerOf(father_module0_tokenId) == father, "Token should not be transferred to the beneficiary");
     }
 
+    function test_claimModule_OwnerTransferred_ButNewOwnerApproved() public {
+        //"Module: The module owner has transferred the module"
+        
+        //address nft_buyer_son = address(4);
+        //uint256 nft_buyer_timer = 2 days;
+
+        vm.startPrank(father);
+
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        heirloom.setModule(densityModule0, father_module0_tokenId, will_timer, daughter);
+
+        IERC721(densityModule0).safeTransferFrom(father, nft_buyer, father_module0_tokenId, "");
+
+        vm.stopPrank();
+
+        vm.startPrank(nft_buyer);
+
+        IERC721(densityModule0).setApprovalForAll(address(heirloom), true);
+        //heirloom.setModule(densityModule0, father_module0_tokenId, nft_buyer_timer, nft_buyer_son);
+
+        vm.stopPrank();
+
+        vm.warp(will_timer + block.timestamp + 1);
+        heirloom.claimModule(densityModule0, father_module0_tokenId);
+
+        (address beneficiary, uint256 timer) = heirloom.viewModuleInformation(densityModule0, father_module0_tokenId);
+        require(beneficiary == address(0), "Beneficiary should be 0");
+        require(timer == 0, "Timer should be 0");
+        require(IERC721(densityModule0).ownerOf(father_module0_tokenId) == nft_buyer, "Token should be not transferred to the beneficiary");
+    }
+
     //////////////////////////////////////////   resetModuleTimer    //////////////////////////////////////////
 
     function test_resetModuleTimer() public {
