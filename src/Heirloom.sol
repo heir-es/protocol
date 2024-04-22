@@ -15,11 +15,11 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract Heirloom is ReentrancyGuard {
     // Contract variables and state
-    address public densityModule0;
-    address public densityModule1;
-    address public densityModule2;
-    address public densityModule3;
-    address public densityModule4;
+    address public immutable densityModule0;
+    address public immutable densityModule1;
+    address public immutable densityModule2;
+    address public immutable densityModule3;
+    address public immutable densityModule4;
 
     event ModuleSet(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary, uint256 _timer);
     event ModuleBenefiaryReplaced(
