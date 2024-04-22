@@ -52,13 +52,10 @@ contract Heirloom is ReentrancyGuard {
         //and if set,
         //then check if the owner is the same, i.e., the module was not transferred
         if (ownerOfWill != address(0) && ownerOfWill == ownerOfModule) {
-            if (densityModule_timer[_densityModule][_moduleId] != 0) {
-                //Check if the module timer is not expired
-                require(
-                    block.timestamp < densityModule_timer[_densityModule][_moduleId],
-                    "Module: The module timer has expired"
-                );
-            }
+            require(
+                block.timestamp < densityModule_timer[_densityModule][_moduleId],
+                "Module: The module timer has expired"
+            );
         }
 
         //Check if the user is the owner of the module
