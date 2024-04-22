@@ -27,7 +27,7 @@ contract Heirloom is ReentrancyGuard {
     );
     event ModuleReset(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
     event ModuleClaimed(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary);
-    event ModuleCanceled(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
+    event ModuleCanceled(address indexed _densityModule, uint256 indexed _moduleId);
 
     // Mapping of densityModule to module id to beneficiary
     mapping(address densityModule => mapping(uint256 moduleId => address beneficiary)) densityModule_beneficiary;
@@ -188,7 +188,7 @@ contract Heirloom is ReentrancyGuard {
             emit ModuleClaimed(_densityModule, _moduleId, _beneficiary);
         } else {
             //Emit event
-            emit ModuleCanceled(_densityModule, _moduleId, densityModule_timer[_densityModule][_moduleId]);
+            emit ModuleCanceled(_densityModule, _moduleId);
         }
     }
 
