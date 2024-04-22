@@ -22,7 +22,7 @@ contract Heirloom is ReentrancyGuard {
     address public immutable densityModule4;
 
     event ModuleSet(address indexed _densityModule, uint256 indexed _moduleId, address _beneficiary, uint256 _timer);
-    event ModuleBenefiaryReplaced(
+    event ModuleBeneficiaryReplaced(
         address indexed _densityModule, uint256 indexed _moduleId, address _previousBeneficiary, address _newBeneficiary
     );
     event ModuleReset(address indexed _densityModule, uint256 indexed _moduleId, uint256 _timer);
@@ -117,7 +117,7 @@ contract Heirloom is ReentrancyGuard {
             densityModule_beneficiary[_densityModule][_moduleId] = _beneficiary;
             if (_previousBeneficiary != address(0)) {
                 //Emit event
-                emit ModuleBenefiaryReplaced(_densityModule, _moduleId, _previousBeneficiary, _beneficiary);
+                emit ModuleBeneficiaryReplaced(_densityModule, _moduleId, _previousBeneficiary, _beneficiary);
             }
         }
 
