@@ -6,7 +6,7 @@ import {Heiress} from "../src/Heiress.sol";
 import {MockERC20} from "./MockERC20.sol";
 import "forge-std/Test.sol";
 
-contract HeirloomTest is Test {
+contract HeiressTest is Test {
     Heiress heiress;
     MockERC20 token;
 
