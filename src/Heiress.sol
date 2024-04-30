@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-///@title Heirloom
+///@title Heiress
 ///@notice A contract to set the beneficiary of the Sentience Module, which can be claimed after the timer expires
 ///@author SophiaVerse
 ///@dev This contract requires the previous approval of the Sentience Module contract to this contract
@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 //import ReentrancyGuard
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract Heirloom is ReentrancyGuard {
+contract Heiress is ReentrancyGuard {
     // Contract variables and state
     address public immutable densityModule0;
     address public immutable densityModule1;
@@ -45,7 +45,7 @@ contract Heirloom is ReentrancyGuard {
         require(
             _densityModule == densityModule0 || _densityModule == densityModule1 || _densityModule == densityModule2
                 || _densityModule == densityModule3 || _densityModule == densityModule4,
-            "Heirloom: This contract is not supported."
+            "Heiress: This contract is not supported."
         );
 
         //Check if the module is not set previously,

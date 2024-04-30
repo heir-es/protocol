@@ -22,5 +22,5 @@ ERC6551 is a previously created module by SophiaVerse, an example of such module
 - User can choose different timer and beneficiary on *setModule* if timer has not expired
 
 ## Limitations:
-- Has the Module is also an ERC721, user can at any time revoke approval (approveForAll = **false**) to **heirloom.sol** making the contract innefective for *claimModule*  
+- Has the Module is also an ERC721, user can at any time revoke approval (approveForAll = **false**) to **heiress.sol** making the contract innefective for *claimModule*  
 - Has the Module is also an ERC721, user can at any time transfer it to anyone else, making the contract innefective, and the new owner has to *setModule* or *claimModule* to use that Module for himself with his settings  

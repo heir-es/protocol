@@ -1,6 +1,6 @@
 pragma solidity 0.8.20;
 
-import {Heirloom} from "../src/Heirloom.sol";
+import {Heiress} from "../src/Heiress.sol";
 
 import "forge-std/Script.sol";
 
@@ -11,7 +11,7 @@ contract DeployScriptMainnet is Script {
     address densityModule3 = 0x66705a07fa726e19BB132c8d8BEcBe6713670160;
     address densityModule4 = 0x5335F23eBeef15906D348Cda4Fba6Abcb584Ac3B;
 
-    function run() public returns (Heirloom heirloom) {
-        heirloom = new Heirloom(densityModule0, densityModule1, densityModule2, densityModule3, densityModule4);
+    function run() public returns (Heiress heiress) {
+        heiress = new Heiress(densityModule0, densityModule1, densityModule2, densityModule3, densityModule4);
     }
 }
